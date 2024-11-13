@@ -13,6 +13,7 @@ import employeeResolver from "./schema/resolvers/employee.resolver";
 import mongoose from "mongoose";
 import { buildContext } from "graphql-passport";
 import { configurePassport } from "./lib/passport.config";
+import path from "path";
 
 configurePassport();
 
@@ -75,6 +76,11 @@ mongoose
             context: async ({ req, res }) => buildContext({ req, res }),
           })
         );
+
+        app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+        app.get("*", (req, res) => {
+          res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+        });
 
         await new Promise<void>((resolve) =>
           httpServer.listen({ port: 4000 }, resolve)
