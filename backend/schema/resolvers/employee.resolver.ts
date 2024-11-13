@@ -5,7 +5,6 @@ const employeeResolver = {
   Mutation: {
     signUp: async (parent, args, context, info) => {
       try {
-        console.log("DATA:", args);
         const { name, email, password, age, gender } = args.data;
         if (!name || !email || !password || !age || !gender) {
           throw new Error("All fields are required");
@@ -73,7 +72,6 @@ const employeeResolver = {
     authenticatedEmployee: async (parent, args, context, info) => {
       try {
         const employee = await context.getUser();
-        console.log("GET Employee:", employee);
         return employee;
       } catch (error: any) {
         console.log("ERROR:", error);
@@ -84,7 +82,6 @@ const employeeResolver = {
       const { limit = 20, offset = 0 } = args;
       try {
         const employees = await Employee.find().skip(offset).limit(limit);
-        console.log("EMPLOYEES", employees)
         return employees;
       } catch (error: any) {
         console.log("ERROR:", error);

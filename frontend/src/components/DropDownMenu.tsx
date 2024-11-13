@@ -4,7 +4,12 @@ import { toast } from "sonner";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_AUTHENTICATED_EMPLOYEE } from "@/graphql/queries/employee.query";
 
-const DropDownMenu = ({ items }: { items: any[] }) => {
+interface MenuItem {
+  label: string;
+  children?: MenuItem[];
+}
+
+const DropDownMenu = ({ items }: { items: MenuItem[] }) => {
   const { data } = useQuery(GET_AUTHENTICATED_EMPLOYEE, {
     nextFetchPolicy: "cache-first",
   });
@@ -23,13 +28,13 @@ const DropDownMenu = ({ items }: { items: any[] }) => {
     }
   };
   //
-  const [openMenus, setOpenMenus] = useState({});
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 
   const toggleMenu = (key: string) => {
     setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const renderItems = (menuItems: any[], level = 0) => {
+  const renderItems = (menuItems: MenuItem[], level = 0) => {
     return menuItems.map((item, index) => {
       const key = `${level}-${index}`;
       const hasChildren = item.children && item.children.length > 0;
@@ -64,7 +69,7 @@ const DropDownMenu = ({ items }: { items: any[] }) => {
           </button>
           {hasChildren && openMenus[key] && (
             <ul className="p-2 mt-2 space-y-2 bg-white rounded-md shadow-md">
-              {renderItems(item.children, level + 1)}
+              {item.children && renderItems(item.children, level + 1)}
             </ul>
           )}
         </li>

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { GraphQLLocalStrategy } from "graphql-passport";
 import Employee from "../models/employee";
+import { GraphQLError } from "graphql";
 
 export const configurePassport = async () => {
   passport.serializeUser((user: any, done) => {
@@ -23,15 +24,15 @@ export const configurePassport = async () => {
       try {
         const employee = await Employee.findOne({ email });
         if (!employee) {
-          throw new Error("Invalid email or password");
+          throw new GraphQLError("No user found");
         }
-        const validPassword = bcrypt.compare(
+        const validPassword = await bcrypt.compare(
           password as string,
           employee.password
         );
 
         if (!validPassword) {
-          throw new Error("Invalid email or password");
+          throw new GraphQLError("Invalid email or password");
         }
 
         return done(null, employee);

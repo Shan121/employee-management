@@ -47,7 +47,7 @@ const LogInForm = () => {
       navigate("/");
     } catch (error) {
       console.log("ERROR LOGIN:", error);
-      toast.error("Something went wrong");
+      if (error instanceof Error) toast.error(error.message || "Error");
     }
   }
 

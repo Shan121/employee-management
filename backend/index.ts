@@ -1,69 +1,3 @@
-// import express from "express";
-// import "dotenv/config";
-// // import cookieParser from "cookie-parser";
-// import mongoose from "mongoose";
-// import cors from "cors";
-// import errorMiddleware from "./middlewares/error";
-// import adminRoutes from "./routes/admin";
-// import userRoutes from "./routes/employee";
-// import path from "path";
-
-// const app = express();
-
-// mongoose
-//   .connect(process.env.DATABASE_URL as string)
-//   .then((c) => {
-//     console.log(`MongoDB connected with HOST: ${c.connection.host}`);
-//   })
-//   .catch((err) => console.log("MongoDB connection error", err));
-
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-
-// const allowedOrigins = [process.env.CLIENT_URL, process.env.MOBILE_APP_URL];
-
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
-
-// // app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-// // app.set("trust proxy", 1);
-
-// app.use("/api/admin", adminRoutes);
-// app.use("/api/user", userRoutes);
-// app.use("/api/online-student", onlineStudentRoutes);
-
-// app.use(errorMiddleware);
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-// });
-
-// const port = process.env.PORT || 8000;
-
-// const server = app.listen(port, () => {
-//   console.log(
-//     `Server is running on PORT: ${port} in ${process.env.NODE_ENV} mode.`
-//   );
-// });
-
-// process.on("unhandledRejection", (err: any) => {
-//   console.log(`ERROR: ${err.message}`);
-//   console.log("Shutting down the server due to Unhandled Promise rejection");
-//   server.close(() => {
-//     process.exit(1);
-//   });
-// });
 import express from "express";
 import http from "http";
 import cors from "cors";
@@ -122,7 +56,6 @@ mongoose
       typeDefs: employeeTypeDef,
       resolvers: employeeResolver,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-      // context: ({ req, res }) => buildContext({ req, res, User })
     });
 
     server
@@ -132,8 +65,7 @@ mongoose
           "/",
 
           cors<cors.CorsRequest>({
-            // origin: process.env.CLIENT_URL,
-            origin: "http://localhost:5173",
+            origin: process.env.CLIENT_URL,
             credentials: true,
           }),
 
@@ -141,7 +73,6 @@ mongoose
 
           expressMiddleware(server, {
             context: async ({ req, res }) => buildContext({ req, res }),
-            // context: async ({ req }) => ({ token: req.headers.token }),
           })
         );
 
