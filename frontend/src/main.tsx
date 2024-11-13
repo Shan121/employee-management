@@ -10,9 +10,10 @@ import AuthRoute from "./components/Routes/AuthRoute.tsx";
 import Layout from "./components/Layout.tsx";
 import Home from "./pages/Home.tsx";
 import EmployeeProfile from "./pages/EmployeeProfile.tsx";
+import { API_URL } from "./lib/api.ts";
 
 const client = new ApolloClient({
-  uri: `${import.meta.env.VITE_API_URL}/graphql`,
+  uri: `${API_URL}/graphql`,
   cache: new InMemoryCache(),
   credentials: "include",
 });

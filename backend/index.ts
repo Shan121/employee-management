@@ -63,7 +63,7 @@ mongoose
       .start()
       .then(async () => {
         app.use(
-          "/",
+          "/graphql",
 
           cors<cors.CorsRequest>({
             origin: process.env.CLIENT_URL,
