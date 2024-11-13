@@ -19,6 +19,7 @@ const employeeTypeDef = `#graphql
         signUp(data: SignUpInput!): Employee
         login(data: LogInInput!): Employee
         logout: Boolean
+        deleteEmployee(id: ID!): Boolean
     }
 
     input SignUpInput {

@@ -7,6 +7,8 @@ export const GET_AUTHENTICATED_EMPLOYEE = gql`
       email
       name
       role
+      age
+      gender
     }
   }
 `;

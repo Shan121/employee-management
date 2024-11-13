@@ -1,16 +1,16 @@
-import { useState } from "react";
 import { LOG_OUT } from "@/graphql/mutations/employee.mutation";
-import { toast } from "sonner";
-import { useMutation, useQuery } from "@apollo/client";
 import { GET_AUTHENTICATED_EMPLOYEE } from "@/graphql/queries/employee.query";
+import { useMutation, useQuery } from "@apollo/client";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 interface MenuItem {
   label: string;
   children?: MenuItem[];
 }
 
-const DropDownMenu = ({ items }: { items: MenuItem[] }) => {
+const DropDownMenuMobile = ({ items }: { items: MenuItem[] }) => {
   const { data } = useQuery(GET_AUTHENTICATED_EMPLOYEE, {
     nextFetchPolicy: "cache-first",
   });
@@ -41,10 +41,10 @@ const DropDownMenu = ({ items }: { items: MenuItem[] }) => {
       const hasChildren = item.children && item.children.length > 0;
 
       return (
-        <li key={key} className="relative w-64">
+        <li key={key} className="relative">
           <button
             onClick={() => hasChildren && toggleMenu(key)}
-            className={`flex items-center px-4 py-2 w-[inherit] text-left hover:bg-gray-100 ${
+            className={`flex items-center w-full px-4 py-2 text-left hover:bg-gray-100 ${
               hasChildren ? "font-semibold" : ""
             }`}
           >
@@ -69,7 +69,7 @@ const DropDownMenu = ({ items }: { items: MenuItem[] }) => {
             )}
           </button>
           {hasChildren && openMenus[key] && (
-            <ul className="p-2 mt-2 space-y-2 bg-white rounded-md shadow-md">
+            <ul className="pl-4 mt-2 space-y-2 bg-white rounded-md shadow-lg">
               {item.children && renderItems(item.children, level + 1)}
             </ul>
           )}
@@ -80,32 +80,25 @@ const DropDownMenu = ({ items }: { items: MenuItem[] }) => {
 
   return (
     <div className="relative inline-block text-left w-full">
-      <ul className="relative flex gap-x-4 mt-2 w-full rounded-md shadow-md bg-white ring-1 ring-black ring-opacity-5">
-        {data?.authenticatedEmployee?.role === "ADMIN" ? (
-          <Link to="/" className="px-4 py-2 font-bold cursor-pointer">
-            LOGO
-          </Link>
-        ) : (
-          <span className="px-4 py-2 font-bold">LOGO</span>
-        )}
-        {renderItems(items)}
-        <div className="flex gap-x-4 absolute end-0">
+      <ul className="mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div className="flex justify-between w-full mb-2">
           <Link
             to="/profile"
-            className="px-4 py-2 hover:underline hover:text-blue-600"
+            className="px-2 py-2 hover:underline hover:text-blue-600"
           >
             {data?.authenticatedEmployee?.name}
           </Link>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             {loading ? "Logging out..." : "Logout"}
           </button>
         </div>
+        {renderItems(items)}
       </ul>
     </div>
   );
 };
 
-export default DropDownMenu;
+export default DropDownMenuMobile;

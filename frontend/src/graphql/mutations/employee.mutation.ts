@@ -25,3 +25,9 @@ export const LOG_OUT = gql`
     logout
   }
 `;
+
+export const DELETE_EMPLOYEE = gql`
+  mutation DeleteEmployee($id: ID!) {
+    deleteEmployee(id: $id)
+  }
+`;

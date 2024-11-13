@@ -1,7 +1,9 @@
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { DELETE_EMPLOYEE } from "@/graphql/mutations/employee.mutation";
 import { GET_EMPLOYEES } from "@/graphql/queries/employee.query";
 import { signupSchema } from "@/schemas/validation.schema";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
@@ -49,6 +51,13 @@ const Home = () => {
     };
   }, [data, hasMore, loadingMore]);
 
+  const [deleteEmployee, { loading: deleteLoading }] = useMutation(
+    DELETE_EMPLOYEE,
+    {
+      refetchQueries: [GET_EMPLOYEES],
+    }
+  );
+
   if (loading)
     return (
       <div>
@@ -58,11 +67,20 @@ const Home = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {data &&
           data.employees.map((employee: z.infer<typeof signupSchema>) => (
-            <Card key={employee._id}>
-              <CardHeader>
+            <Card key={employee._id} className="relative">
+              <Trash
+                onClick={() =>
+                  deleteEmployee({ variables: { id: employee._id } })
+                }
+                aria-disabled={deleteLoading}
+                size={20}
+                color="red"
+                className="absolute top-2 right-2 cursor-pointer"
+              />
+              <CardHeader className="flex">
                 <CardTitle>
                   <Link to={`/employee/${employee._id}`}>{employee.name}</Link>
                 </CardTitle>

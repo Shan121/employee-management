@@ -11,6 +11,8 @@ import Layout from "./components/Layout.tsx";
 import Home from "./pages/Home.tsx";
 import EmployeeProfile from "./pages/EmployeeProfile.tsx";
 import { API_URL } from "./lib/api.ts";
+import AdminRoute from "./components/Routes/AdminRoute.tsx";
+import Profile from "./pages/Profile.tsx";
 
 const client = new ApolloClient({
   uri: `${API_URL}/graphql`,
@@ -30,6 +32,19 @@ const router = createBrowserRouter([
 
   {
     element: <AuthRoute />,
+    children: [
+      {
+        path: "/profile",
+        element: (
+          <Layout>
+            <Profile />
+          </Layout>
+        ),
+      },
+    ],
+  },
+  {
+    element: <AdminRoute />,
     children: [
       {
         path: "/",

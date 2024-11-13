@@ -1,29 +1,17 @@
+import { menuItems } from "@/lib/menuItems";
 import DropDownMenu from "./DropDownMenu";
+import SideBar from "./SideBar";
 
 const Header = () => {
-  const categories = [
-    {
-      label: "Menu1",
-      children: [
-        {
-          label: "Sub Menu1",
-          children: [{ label: "item" }, { label: "item" }, { label: "item" }],
-        },
-        {
-          label: "Sub Menu2",
-          children: [{ label: "item" }, { label: "item" }],
-        },
-      ],
-    },
-    {
-      label: "Menu2",
-      children: [{ label: "item" }, { label: "item" }, { label: "item" }],
-    },
-  ];
 
   return (
-    <div className="p-4">
-      <DropDownMenu items={categories} />
+    <div className="p-2">
+      <div className="hidden md:block">
+        <DropDownMenu items={menuItems} />
+      </div>
+      <div className="md:hidden">
+        <SideBar />
+      </div>
     </div>
   );
 };

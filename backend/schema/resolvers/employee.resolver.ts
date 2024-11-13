@@ -66,6 +66,17 @@ const employeeResolver = {
         throw new Error(error.message || "Something went wrong");
       }
     },
+
+    deleteEmployee: async (parent, args, context, info) => {
+      try {
+        if (!args.id) throw new Error("Id is required");
+        await Employee.findByIdAndDelete(args.id);
+        return true;
+      } catch (error: any) {
+        console.log("ERROR:", error);
+        throw new Error(error.message || "Something went wrong");
+      }
+    },
   },
 
   Query: {
@@ -81,8 +92,12 @@ const employeeResolver = {
     employees: async (parent, args, context, info) => {
       const { limit = 20, offset = 0 } = args;
       try {
-        const employees = await Employee.find().skip(offset).limit(limit);
-        return employees;
+        const currentUser = await context.getUser();
+        if (!currentUser || currentUser.role !== "admin")
+          throw new Error("Unauthorized");
+        return Employee.find({ _id: { $ne: currentUser._id } })
+          .skip(offset)
+          .limit(limit);
       } catch (error: any) {
         console.log("ERROR:", error);
         throw new Error(error.message || "Something went wrong");
